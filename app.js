@@ -9,6 +9,7 @@ import { config } from "dotenv";
 import morgan from "morgan";
 import paymentRoute from './routes/payment.js'
 import dashboardRoute from './routes/stats.js'
+import Stripe from 'stripe'
 
 const app = express();
 
@@ -16,9 +17,11 @@ config({
   path: "./.env",
 });
 const port = process.env.PORT || 4000;
+const stripeKEY = process.env.STRIPE_KEY || "";
 
 connectDB();
 
+export const stripe = new Stripe(stripeKEY);
 export const myCache = new NodeCache();
 
 app.use(express.json());

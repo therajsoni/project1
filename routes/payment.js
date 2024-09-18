@@ -4,11 +4,14 @@ import { adminOnly } from "../middleware/auth.js";
 import {
   allCoupons,
   applyDiscount,
+  createPaymentIntent,
   deleteCoupon,
   newCoupon,
 } from "../controllers/payment.js";
 
 const app = express.Router();
+
+app.post("/create" , createPaymentIntent)
 
 app.get("/discount", applyDiscount);
 

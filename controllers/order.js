@@ -4,6 +4,7 @@ import { Order } from "../models/order.js";
 import { invalidateCache, reduceStock } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
 export const newOrder = TryCatch(async (req, res, next) => {
+  // stripe for online payment platform
   const {
     shippingInfo,
     user,
@@ -36,7 +37,7 @@ export const newOrder = TryCatch(async (req, res, next) => {
 
   const temp = order.orderItems.map(i => String(i.productId));
 
-  await invalidateCache({ product: true, order: true, admin: true , userId :user, productId : temp});
+   invalidateCache({ product: true, order: true, admin: true , userId :user, productId : temp});
 
   return res.status(201).json({
     success: true,
@@ -120,7 +121,7 @@ export const processOrder = TryCatch(async (req, res, next) => {
 
   await order.save();
 
-  await invalidateCache({ product: false, order: true, admin: true,userId : order.user,orderId : String(order._id)});
+   invalidateCache({ product: false, order: true, admin: true,userId : order.user,orderId : String(order._id)});
 
   return res.status(200).json({
     success: true,
@@ -133,7 +134,7 @@ export const deleteOrder = TryCatch(async(req,res,next)=>{
   const order = await Order.findById(id);
   if (!order) return next(new ErrorHandler("Order not found", 404));
   await order.deleteOne();
-  await invalidateCache({ product: false, order: true, admin: true,userId : order.user,orderId : String(order._id)});
+   invalidateCache({ product: false, order: true, admin: true,userId : order.user,orderId : String(order._id)});
   return res.status(200).json({
     success: true,
     message: "Order deleted Successfully",
